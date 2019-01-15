@@ -1,10 +1,23 @@
 #!/usr/bin/env bash
-echo "******************************"
-echo "* 500-setup_php.sh           *"
-echo "******************************"
+
+####################
+# COLOURS
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+####################
 
 # Enable trace printing and exit on the first error
-set -ex
+# set -ex
+
+# Just exit on first error
+set -e
+
+echo -e ""
+echo -e "${YELLOW}******************************${NC}"
+echo -e "${YELLOW}*      500-setup_php.sh      *${NC}"
+echo -e "${YELLOW}******************************${NC}"
 
 function setup_xdebug() {
     cd /usr/lib
@@ -30,36 +43,48 @@ function setup_xdebug() {
     ./configure --with-php-config=/opt/phpfarm/inst/php-$1/bin/php-config
     make
     make install
-    if [[ $1 == *"5.4"* ]] ; then
-        cat /vagrant/files/xdebug-5.4.txt >> /opt/phpfarm/inst/php-$1/etc/php.ini
-    else
-        cat /vagrant/files/xdebug.txt >> /opt/phpfarm/inst/php-$1/etc/php.ini
-    fi
+	cat <<EOL >> /opt/phpfarm/inst/php-$1/etc/php.ini
+
+[xdebug]
+zend_extension=xdebug.so
+xdebug.max_nesting_level=512
+;xdebug.profiler_enable=1
+xdebug.profiler_enable_trigger=1
+xdebug.profiler_output_dir=/srv/www/xdebug_profiler
+xdebug.remote_enable=1
+xdebug.remote_connect_back=1
+xdebug.remote_host=192.168.33.1
+xdebug.remote_port=9000
+;xdebug.remote_log="/tmp/xdbg.log"
+EOL
+
+}
+
+function setup_imagick() {
+    wget -O imagick.tgz http://pecl.php.net/get/imagick
+    tar xvzf imagick.tgz
+    cd imagick-*
+    /opt/phpfarm/inst/php-$1/bin/phpize
+
+    ./configure --with-php-config=/opt/phpfarm/inst/php-$1/bin/php-config
+    make
+    make install
+    cat <<EOL >> /opt/phpfarm/inst/php-$1/etc/php.ini
+
+[imagick]
+extension=imagick.so
+EOL
 }
 
 function setup_phpfarm() {
     cd /opt
     if [ ! -d /opt/phpfarm ]; then
-        git clone https://github.com/DemacMedia/phpfarm.git phpfarm
-    else
-        # Patch old phpfarm options:
-        if [[ $(/opt/phpfarm/custom/options-5.4.sh | grep 'freetype')  == '' ]]; then
-            sed -i "s/--with-png-dir/--with-png-dir \\\\\n--with-freetype-dir=\/usr\/include\/freetype2 \\\\\n--enable-gd-native-ttf/" /opt/phpfarm/custom/options-5.4.sh
-        fi
-        if [[ $(/opt/phpfarm/custom/options-5.5.sh | grep 'freetype')  == '' ]]; then
-            sed -i "s/--with-png-dir/--with-png-dir \\\\\n--with-freetype-dir=\/usr\/include\/freetype2 \\\\\n--enable-gd-native-ttf/" /opt/phpfarm/custom/options-5.5.sh
-        fi
-        if [[ $(/opt/phpfarm/custom/options-5.6.sh | grep 'freetype')  == '' ]]; then
-            sed -i "s/--with-xsl/--with-xsl \\\\\n--with-freetype-dir=\/usr\/include\/freetype2 \\\\\n--enable-gd-native-ttf/" /opt/phpfarm/custom/options-5.6.sh
-        fi
-        if [[ $(/opt/phpfarm/custom/options-7.sh | grep 'freetype')  == '' ]]; then
-            sed -i "s/--with-xsl/--with-xsl \\\\\n--with-freetype-dir=\/usr\/include\/freetype2 \\\\\n--enable-gd-native-ttf/" /opt/phpfarm/custom/options-7.sh
-        fi
+        git clone https://github.com/fpoirotte/phpfarm.git phpfarm
     fi
 }
 
 function setup_php() {
-    # Making these local so they dopn't bleed out into the global scope
+    # Making these local so they don't bleed out into the global scope
     local arr
     local conf
     local config_php
@@ -75,6 +100,12 @@ function setup_php() {
     local shortname
 
     source /vagrant/config_php.sh
+
+    if [[ ! -e /opt/phpfarm/custom ]]; then
+        sudo mkdir -p /opt/phpfarm/custom
+    fi
+
+    sudo cp -a /vagrant/files/php-options/. /opt/phpfarm/custom/
 
     # Remove any php version not currently shown in config_php.sh
     for installed in $(ls -d /opt/phpfarm/inst/php-* | cut -d'/' -f5 | cut -d'-' -f2); do
@@ -98,8 +129,6 @@ function setup_php() {
                     /etc/init.d/php-${shortname} stop || true
 
                     # This next bit is to ensure that no process keeps the listening port occupied
-                    # Otherwise, removing a php version, then vagrant provision, then adding it back and
-                    # finally provisioning again causes an error because the requested port is already used
                     prefix=$(cat /etc/init.d/php-${shortname} | grep 'prefix=/opt/phpfarm' | cut -d'=' -f2)
                     conf=$(cat /etc/init.d/php-${shortname} | grep 'php_fpm_CONF=' | cut -d'}' -f2)
                     processes=$(ps aux | grep $prefix$conf | tr -s ' ' | cut -d ' ' -f2)
@@ -112,7 +141,7 @@ function setup_php() {
         fi
     done;
 
-    # Add new versions of PHP 
+    # Add new versions of PHP
     for i in "${config_php[@]}"; do
         arr=(${i// / })
         phpv=${arr[0]}
@@ -123,6 +152,7 @@ function setup_php() {
             cd /opt/phpfarm/src
             ./main.sh ${phpv}
             setup_xdebug ${phpv}
+            setup_imagick ${phpv}
             cp /opt/phpfarm/inst/php-${phpv}/etc/php.ini /opt/phpfarm/inst/php-${phpv}/lib/php.ini
         fi
         if [ ${phpv:0:1} == 5 ]; then

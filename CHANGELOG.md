@@ -1,5 +1,18 @@
 # Change Log
 
+## [2.0.0](https://github.com/demacmedia/vagrant-lamp/tree/1.0.13) (2018-08-21)
+[Full Changelog](https://github.com/demacmedia/vagrant-lamp/compare/1.0.13...2.0.0)
+
+    - Upgrade to Ubuntu 18 LTS (Bionic64)
+    - Add PHP 7.1, 7.2, 7.3
+    - Add Elastic Search 6.5.4
+    - Remove PHP 5 (EOL)
+    - Colour code setup scripts
+    - Remove legacy code
+    - Changed domains. dev TLD has special control by Google and not recommended
+    - IP Changed from 192.168.33.10 to 192.168.33.15 (Major version upgrade)
+    - Added additional xdebug params to default php.ini (eg: max_nesting_level and profiler)
+
 ## [1.0.13](https://github.com/demacmedia/vagrant-lamp/tree/1.0.13) (2018-03-09)
 [Full Changelog](https://github.com/demacmedia/vagrant-lamp/compare/1.0.12...1.0.13)
 

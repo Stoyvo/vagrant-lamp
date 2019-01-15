@@ -1,10 +1,24 @@
 #!/usr/bin/env bash
-echo "******************************"
-echo "* 400-setup_mysql.sh         *"
-echo "******************************"
+
+####################
+# COLOURS
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+####################
 
 # Enable trace printing and exit on the first error
-set -ex
+# set -ex
+
+# Just exit on first error
+set -e
+
+echo -e ""
+echo -e "${YELLOW}******************************${NC}"
+echo -e "${YELLOW}*     400-setup_mysql.sh     *${NC}"
+echo -e "${YELLOW}******************************${NC}"
+
 
 # If mysql is already here, move existing data to /srv/mysql/data and change my.cnf to point there
 if [ -f /etc/init.d/mysql* ]; then
@@ -27,18 +41,19 @@ if [ -f /etc/init.d/mysql* ]; then
     export MYSQL_PWD=''
 fi
 
-
+export DEBIAN_FRONTEND=noninteractive
 if [ ! -f /etc/init.d/mysql* ]; then
-    wget https://repo.percona.com/apt/percona-release_0.1-4.$(lsb_release -sc)_all.deb
-    dpkg -i percona-release_0.1-4.$(lsb_release -sc)_all.deb
+    wget https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
+    dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
     apt-get update
-    echo "percona-server-server-5.6 percona-server-server/root_password password root"       | sudo debconf-set-selections
-    echo "percona-server-server-5.6 percona-server-server/root_password_again password root" | sudo debconf-set-selections
+    echo "percona-server-server-5.7 percona-server-server/root_password password root"       | sudo debconf-set-selections
+    echo "percona-server-server-5.7 percona-server-server/root_password_again password root" | sudo debconf-set-selections
 
-    apt-get install -y percona-server-server-5.6 percona-server-client-5.6 2>&1
+    apt-get install -q -y percona-server-server-5.7 percona-server-client-5.7 2>&1
     service mysql stop
 
     sed -i "s/bind-address.*/bind-address    = 0.0.0.0/"           /etc/mysql/my.cnf
+
     sed -i "s/max_allowed_packet.*/max_allowed_packet      = 64M/" /etc/mysql/my.cnf
     sed -i "s/datadir.*/datadir         = \/srv\/mysql\/data/"     /etc/mysql/my.cnf
     if [ ! -d /srv/mysql/data/mysql ]; then
@@ -60,7 +75,7 @@ if [[ $(/etc/mysql/my.cnf | grep 'innodb_log_file_size')  == '' ]]; then
     sed -i 's/skip-external-locking/skip-external-locking\ninnodb_log_file_size = 256M\n/' /etc/mysql/my.cnf
 fi
 
-apt-get install -y percona-toolkit 2>&1
+apt-get install -q -y percona-toolkit 2>&1
 
 
 # Setup mysql-sync script

@@ -1,10 +1,24 @@
 #!/usr/bin/env bash
-echo "******************************"
-echo "* 700-setup_tools.sh         *"
-echo "******************************"
+
+####################
+# COLOURS
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+####################
 
 # Enable trace printing and exit on the first error
-set -ex
+# set -ex
+
+# Just exit on first error
+set -e
+
+echo -e ""
+echo -e "${YELLOW}******************************${NC}"
+echo -e "${YELLOW}*     700-setup_tools.sh     *${NC}"
+echo -e "${YELLOW}******************************${NC}"
+
 
 # Setup Composer
 if [ ! -f /usr/local/bin/composer ]; then

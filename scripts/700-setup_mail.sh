@@ -1,7 +1,23 @@
 #!/usr/bin/env bash
-echo "******************************"
-echo "* 600-setup_mail.sh          *"
-echo "******************************"
+
+####################
+# COLOURS
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+####################
+
+# Enable trace printing and exit on the first error
+# set -ex
+
+# Just exit on first error
+set -e
+
+echo -e ""
+echo -e "${YELLOW}******************************${NC}"
+echo -e "${YELLOW}*     600-setup_mail.sh      *${NC}"
+echo -e "${YELLOW}******************************${NC}"
 
 # Download binary from github
 if [ ! -f /usr/local/bin/mailhog ]; then
@@ -48,8 +64,8 @@ if [ ! -f /etc/apache2/sites-available/100-mailhog.demacmedia.com.conf ]; then
   ProxyPreserveHost On
   ProxyRequests Off
   ServerName mailhog.demacmedia.com
-  ProxyPass / http://192.168.33.10:8025/
-  ProxyPassReverse / http://192.168.33.10:8025/
+  ProxyPass / http://192.168.33.15:8025/
+  ProxyPassReverse / http://192.168.33.15:8025/
 </VirtualHost>
 EOL
 

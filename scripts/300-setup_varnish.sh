@@ -1,10 +1,23 @@
 #!/usr/bin/env bash
-echo "******************************"
-echo "* 200-setup_varnish.sh       *"
-echo "******************************"
+
+####################
+# COLOURS
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+####################
 
 # Enable trace printing and exit on the first error
-set -ex
+# set -ex
+
+# Just exit on first error
+set -e
+
+echo -e ""
+echo -e "${YELLOW}******************************${NC}"
+echo -e "${YELLOW}*    200-setup_varnish.sh    *${NC}"
+echo -e "${YELLOW}******************************${NC}"
 
 # Setup Varnish
 apt-get install -y varnish 2>&1

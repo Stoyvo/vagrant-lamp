@@ -9,7 +9,7 @@ specifically.
 
 ### Requirements
 
-- [Vagrant 1.8+](https://www.vagrantup.com/downloads.html)
+- [Vagrant 2.1+](https://www.vagrantup.com/downloads.html)
 - [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
@@ -31,11 +31,12 @@ specifically.
     -   Add host entries to files/hosts.txt to have them added to Guest machine on provisioning
 -   config.yml settings
     -   vagrant_hostname: Hostname on Guest VM
-        OPTIONAL - can leave default `demacvm.dev`
+        OPTIONAL - can leave default `demacmedia.bionic`
     -   vagrant_machine_name: Vagrant Machine Name, used for creating unique VM
-        OPTIONAL - can leave default `demacvm`
+        OPTIONAL - can leave default `demacvm-bionic`
     -   vagrant_ip: IP addressed used to access Guest VM from Local machine
-        OPTIONAL - can leave default `192.168.33.10`
+        OPTIONAL - can leave default `192.168.33.15`.
+        WARNING: Changing this will break mailhog. For now, you will need to update ./scripts/700-setup_mail.sh
     -   vagrant_public_ip: Public IP address of VM
         OPTIONAL - recommended leave defualt `empty`
     -   vagrant_synced_folders: Shared Folders from HOST machine to Guest
@@ -62,22 +63,23 @@ specifically.
 
           - local_path: ~/projects/backup
             destination: /srv/backup
-            type: nfs
+            type:
             create: true
         ```
     -   vagrant_memory: Memory to assign to VM
-        OPTIONAL - can leave default `2048`, recommended `4096` or more for M2 projects
+        OPTIONAL - can leave default `4096`
     -   vagrant_cpus: CPU Cores to assign to VM
-        OPTIONAL - can leave default `2`
+        OPTIONAL - can leave default `4`
 
 #### The following are installed:
 
 -   Apache2 with mpm\_event
--   Percona 5.6 (MySQL Server and Client)
+-   Percona 5.7 (MySQL Server and Client)
 -   Varnish
 -   Redis
--   PHP-FPM 5.4, 5.5, 5.6 & 7.0 /w Xdebug (via PHPFARM)
+-   PHP-FPM 7.0, 7.1, 7.2, 7.3 /w Xdebug + Imagick (via PHPFARM)
 -   HTOP
+-   Elastic Search 6.5.4
 -   dos2unix
 -   smem
 -   strace
