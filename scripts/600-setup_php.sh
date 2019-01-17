@@ -79,6 +79,27 @@ date.timezone = Etc/UTC
 EOL
 }
 
+function setup_apcu() {
+    cd /usr/lib
+    if [ -d /usr/lib/apcu ]; then
+        rm -rf apcu
+    fi
+    git clone git://github.com/krakjoe/apcu.git
+    cd apcu
+
+    git checkout v5.1.16
+
+    /opt/phpfarm/inst/php-$1/bin/phpize
+    ./configure --with-php-config=/opt/phpfarm/inst/php-$1/bin/php-config
+    make
+    make install
+	cat <<EOL >> /opt/phpfarm/inst/php-$1/etc/php.ini
+
+[apcu]
+extension=apcu.so
+EOL
+}
+
 function setup_phpfarm() {
     cd /opt
     if [ ! -d /opt/phpfarm ]; then
@@ -156,6 +177,7 @@ function setup_php() {
             ./main.sh ${phpv}
             setup_xdebug ${phpv}
             setup_imagick ${phpv}
+            setup_apcu ${phpv}
             cp /opt/phpfarm/inst/php-${phpv}/etc/php.ini /opt/phpfarm/inst/php-${phpv}/lib/php.ini
         fi
         if [ ${phpv:0:1} == 5 ]; then

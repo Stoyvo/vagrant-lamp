@@ -1,6 +1,5 @@
 configoptions="
 --disable-short-tags \
---enable-apc \
 --enable-bcmath \
 --enable-cli \
 --enable-cgi \
@@ -9,11 +8,9 @@ configoptions="
 --enable-exif \
 --enable-fpm \
 --enable-ftp \
---enable-gd-native-ttf \
 --enable-intl \
 --enable-intl \
 --enable-mbstring \
---enable-mmap \
 --enable-pcntl \
 --enable-soap \
 --enable-sockets \
@@ -25,7 +22,7 @@ configoptions="
 --with-gettext \
 --with-jpeg-dir \
 --with-layout=GNU \
---with-mysql \
+--with-libzip \
 --with-mysqli \
 --with-openssl \
 --with-pdo-mysql \
@@ -33,5 +30,5 @@ configoptions="
 --with-readline \
 --with-xsl \
 --with-zlib \
---without-pear
+--with-pear
 "
