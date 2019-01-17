@@ -55,11 +55,7 @@ if [ ! -f /etc/init.d/mysql* ]; then
     echo "percona-server-server-5.7 percona-server-server-5.7/re-root-pass password $MYSQL_ROOT_PASSWORD" | debconf-set-selections
 
     apt install -y percona-server-server-5.7 percona-server-client-5.7 2>&1
-#
-#    echo "percona-server-server-5.7 percona-server-server/root_password password root"       | sudo debconf-set-selections
-#    echo "percona-server-server-5.7 percona-server-server/root_password_again password root" | sudo debconf-set-selections
-#
-#    apt-get install -q -y percona-server-server-5.7 percona-server-client-5.7 2>&1
+
     service mysql stop
 
     sed -i "s/bind-address.*/bind-address    = 0.0.0.0/"           /etc/mysql/my.cnf
