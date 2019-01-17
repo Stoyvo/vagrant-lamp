@@ -21,14 +21,14 @@ echo -e "${YELLOW}******************************${NC}"
 
 # Download binary from github
 if [ ! -f /usr/local/bin/mailhog ]; then
-    wget --quiet -O /usr/local/bin/mailhog https://github.com/mailhog/MailHog/releases/download/v0.2.0/MailHog_linux_amd64
+    wget --progress=bar:force -O /usr/local/bin/mailhog https://github.com/mailhog/MailHog/releases/download/v0.2.0/MailHog_linux_amd64
 
     # Make it executable
     chmod +x /usr/local/bin/mailhog
 fi
 
 if [ ! -f /usr/local/bin/mhsendmail ]; then
-    wget --quiet -O /usr/local/bin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64
+    wget --progress=bar:force -O /usr/local/bin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64
     chmod +x /usr/local/bin/mhsendmail
 fi
 

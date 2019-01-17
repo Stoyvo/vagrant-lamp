@@ -61,7 +61,7 @@ EOL
 }
 
 function setup_imagick() {
-    wget -O imagick.tgz http://pecl.php.net/get/imagick
+    wget --progress=bar:force -O imagick.tgz http://pecl.php.net/get/imagick
     tar xvzf imagick.tgz
     cd imagick-*
     /opt/phpfarm/inst/php-$1/bin/phpize
@@ -73,6 +73,9 @@ function setup_imagick() {
 
 [imagick]
 extension=imagick.so
+
+[Date]
+date.timezone = Etc/UTC
 EOL
 }
 

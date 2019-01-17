@@ -43,13 +43,23 @@ fi
 
 export DEBIAN_FRONTEND=noninteractive
 if [ ! -f /etc/init.d/mysql* ]; then
-    wget https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
+    wget --progress=bar:force https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
     dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
     apt-get update
-    echo "percona-server-server-5.7 percona-server-server/root_password password root"       | sudo debconf-set-selections
-    echo "percona-server-server-5.7 percona-server-server/root_password_again password root" | sudo debconf-set-selections
 
-    apt-get install -q -y percona-server-server-5.7 percona-server-client-5.7 2>&1
+
+    export MYSQL_ROOT_PASSWORD=root
+    export DEBIAN_FRONTEND=noninteractive
+
+    echo "percona-server-server-5.7 percona-server-server-5.7/root-pass password $MYSQL_ROOT_PASSWORD" | debconf-set-selections
+    echo "percona-server-server-5.7 percona-server-server-5.7/re-root-pass password $MYSQL_ROOT_PASSWORD" | debconf-set-selections
+
+    apt install -y percona-server-server-5.7 percona-server-client-5.7 2>&1
+#
+#    echo "percona-server-server-5.7 percona-server-server/root_password password root"       | sudo debconf-set-selections
+#    echo "percona-server-server-5.7 percona-server-server/root_password_again password root" | sudo debconf-set-selections
+#
+#    apt-get install -q -y percona-server-server-5.7 percona-server-client-5.7 2>&1
     service mysql stop
 
     sed -i "s/bind-address.*/bind-address    = 0.0.0.0/"           /etc/mysql/my.cnf
@@ -76,7 +86,6 @@ if [[ $(/etc/mysql/my.cnf | grep 'innodb_log_file_size')  == '' ]]; then
 fi
 
 apt-get install -q -y percona-toolkit 2>&1
-
 
 # Setup mysql-sync script
 yes | cp -rf /vagrant/files/mysql-sync.sh /usr/local/bin/mysql-sync

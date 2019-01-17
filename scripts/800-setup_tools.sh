@@ -27,6 +27,8 @@ if [ ! -f /usr/local/bin/composer ]; then
     curl -sS https://getcomposer.org/installer | ${php}
     mv composer.phar /usr/local/bin/composer
     chmod +x /usr/local/bin/composer
+    mkdir ~/.composer
+    echo "{}" > ~/.composer/composer.json
 fi
 
 # Set up n98 for M1, M2 and automatic selection based on platform in use
