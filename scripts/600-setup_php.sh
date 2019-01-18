@@ -74,8 +74,6 @@ function setup_imagick() {
 [imagick]
 extension=imagick.so
 
-[Date]
-date.timezone = Etc/UTC
 EOL
 }
 
@@ -178,6 +176,16 @@ function setup_php() {
             setup_xdebug ${phpv}
             setup_imagick ${phpv}
             setup_apcu ${phpv}
+
+            cat <<EOL >> /opt/phpfarm/inst/php-${phpv}/etc/php.ini
+
+[PHP]
+memory_limit = 1G
+
+[Date]
+date.timezone = Etc/UTC
+EOL
+
             cp /opt/phpfarm/inst/php-${phpv}/etc/php.ini /opt/phpfarm/inst/php-${phpv}/lib/php.ini
         fi
         if [ ${phpv:0:1} == 5 ]; then
