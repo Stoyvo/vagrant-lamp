@@ -11,6 +11,7 @@ configoptions="
 --enable-intl \
 --enable-intl \
 --enable-mbstring \
+--enable-opcache \
 --enable-pcntl \
 --enable-soap \
 --enable-sockets \

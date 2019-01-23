@@ -19,6 +19,19 @@ echo -e "${YELLOW}******************************${NC}"
 echo -e "${YELLOW}*      500-setup_php.sh      *${NC}"
 echo -e "${YELLOW}******************************${NC}"
 
+function setup_opcache() {
+    cat <<EOL >> /opt/phpfarm/inst/php-$1/etc/php.ini
+
+[opcache]
+opcache.enable=1
+opcache.enable_cli=1
+opcache.interned_strings_buffer=8
+opcache.max_accelerated_files=4000
+opcache.memory_consumption=128
+opcache.revalidate_freq=15
+EOL
+}
+
 function setup_xdebug() {
     cd /usr/lib
     if [ -d /usr/lib/xdebug ]; then
@@ -73,7 +86,6 @@ function setup_imagick() {
 
 [imagick]
 extension=imagick.so
-
 EOL
 }
 
@@ -95,6 +107,7 @@ function setup_apcu() {
 
 [apcu]
 extension=apcu.so
+apc.enable_cli=1
 EOL
 }
 
@@ -173,9 +186,10 @@ function setup_php() {
         if [ ! -f /opt/phpfarm/inst/php-${phpv}/bin/php ]; then
             cd /opt/phpfarm/src
             ./main.sh ${phpv}
-            setup_xdebug ${phpv}
-            setup_imagick ${phpv}
+            setup_opcache ${phpv}
             setup_apcu ${phpv}
+            setup_imagick ${phpv}
+            setup_xdebug ${phpv}
 
             cat <<EOL >> /opt/phpfarm/inst/php-${phpv}/etc/php.ini
 

@@ -22,10 +22,8 @@ echo -e "${YELLOW}********************************${NC}"
 
 wget --progress=bar:force -O - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
 
-wget --progress=bar:force https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.5.4.deb
-wget --progress=bar:force https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.5.4.deb.sha512
-shasum -a 512 -c elasticsearch-6.5.4.deb.sha512
-dpkg -i elasticsearch-6.5.4.deb
+wget --progress=bar:force https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.14.deb
+dpkg -i elasticsearch-5.6.14.deb
 
 sed -i "s/# network.*/network.host: 192.168.33.15/g" /etc/elasticsearch/elasticsearch.yml
 

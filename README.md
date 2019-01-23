@@ -77,9 +77,9 @@ specifically.
 -   Percona 5.7 (MySQL Server and Client)
 -   Varnish
 -   Redis
--   PHP-FPM 7.0, 7.1, 7.2, 7.3 /w Xdebug + Imagick (via PHPFARM)
+-   PHP-FPM 7.0, 7.1, 7.2, 7.3 /w Xdebug + Imagick + APCu + opCache (via PHPFARM)
 -   HTOP
--   Elastic Search 6.5.4
+-   Elastic Search 5.6.14
 -   dos2unix
 -   smem
 -   strace
