@@ -16,7 +16,7 @@ set -e
 
 echo -e ""
 echo -e "${YELLOW}******************************${NC}"
-echo -e "${YELLOW}*     700-setup_tools.sh     *${NC}"
+echo -e "${YELLOW}*     800-setup_tools.sh     *${NC}"
 echo -e "${YELLOW}******************************${NC}"
 
 
@@ -44,7 +44,7 @@ if [ ! -f /usr/local/bin/n98 ] || [ ! -f /usr/local/bin/n98-1 ] || [ ! -f /usr/l
     mv n98-magerun2.phar /usr/local/bin/n98-2
     chmod +x /usr/local/bin/n98-2
 
-    cp /vagrant/files/n98 /usr/local/bin/n98
+    cp /vagrant/files/tools/n98 /usr/local/bin/n98
     chmod +x /usr/local/bin/n98
 fi
 

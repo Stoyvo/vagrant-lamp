@@ -16,7 +16,7 @@ set -e
 
 echo -e ""
 echo -e "${YELLOW}******************************${NC}"
-echo -e "${YELLOW}*    200-setup_varnish.sh    *${NC}"
+echo -e "${YELLOW}*    300-setup_varnish.sh    *${NC}"
 echo -e "${YELLOW}******************************${NC}"
 
 # Setup Varnish

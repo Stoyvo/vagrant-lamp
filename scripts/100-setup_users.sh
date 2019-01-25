@@ -16,7 +16,7 @@ set -e
 
 echo -e ""
 echo -e "${YELLOW}******************************${NC}"
-echo -e "${YELLOW}*     001-setup_users.sh     *${NC}"
+echo -e "${YELLOW}*     100-setup_users.sh     *${NC}"
 echo -e "${YELLOW}******************************${NC}"
 
 

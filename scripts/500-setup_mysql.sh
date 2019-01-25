@@ -16,7 +16,7 @@ set -e
 
 echo -e ""
 echo -e "${YELLOW}******************************${NC}"
-echo -e "${YELLOW}*     400-setup_mysql.sh     *${NC}"
+echo -e "${YELLOW}*     500-setup_mysql.sh     *${NC}"
 echo -e "${YELLOW}******************************${NC}"
 
 
@@ -84,5 +84,5 @@ fi
 apt-get install -q -y percona-toolkit 2>&1
 
 # Setup mysql-sync script
-yes | cp -rf /vagrant/files/mysql-sync.sh /usr/local/bin/mysql-sync
+yes | cp -rf /vagrant/files/tools/mysql-sync.sh /usr/local/bin/mysql-sync
 chmod +x /usr/local/bin/mysql-sync

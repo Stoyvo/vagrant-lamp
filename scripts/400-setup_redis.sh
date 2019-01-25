@@ -16,14 +16,14 @@ set -e
 
 echo -e ""
 echo -e "${YELLOW}******************************${NC}"
-echo -e "${YELLOW}*     300-setup_redis.sh     *${NC}"
+echo -e "${YELLOW}*     400-setup_redis.sh     *${NC}"
 echo -e "${YELLOW}******************************${NC}"
 
 # Setup Redis
 apt-get install -y redis-server 2>&1
 
 #setup redis script
-yes | cp -rf /vagrant/files/redis-setup.sh /usr/local/bin/redis-setup
+yes | cp -rf /vagrant/files/tools/redis-setup.sh /usr/local/bin/redis-setup
 chmod +x /usr/local/bin/redis-setup
 
 if [ ! -f /etc/redis/redis-default.conf ]; then

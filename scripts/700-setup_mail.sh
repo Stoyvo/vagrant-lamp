@@ -16,7 +16,7 @@ set -e
 
 echo -e ""
 echo -e "${YELLOW}******************************${NC}"
-echo -e "${YELLOW}*     600-setup_mail.sh      *${NC}"
+echo -e "${YELLOW}*     700-setup_mail.sh      *${NC}"
 echo -e "${YELLOW}******************************${NC}"
 
 # Download binary from github

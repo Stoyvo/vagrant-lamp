@@ -16,7 +16,7 @@ set -e
 
 echo -e ""
 echo -e "${YELLOW}******************************${NC}"
-echo -e "${YELLOW}*      500-setup_php.sh      *${NC}"
+echo -e "${YELLOW}*      600-setup_php.sh      *${NC}"
 echo -e "${YELLOW}******************************${NC}"
 
 function setup_opcache() {

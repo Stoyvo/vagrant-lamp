@@ -16,7 +16,7 @@ set -e
 
 echo -e ""
 echo -e "${YELLOW}******************************${NC}"
-echo -e "${YELLOW}*    100-setup_apache.sh     *${NC}"
+echo -e "${YELLOW}*    200-setup_apache.sh     *${NC}"
 echo -e "${YELLOW}******************************${NC}"
 
 # Setup Apache
@@ -36,5 +36,5 @@ if [ -f /etc/apache2/sites-available/default-ssl.conf ]; then
 fi
 
 # Setup VHOST Script
-yes | cp -rf /vagrant/files/vhost.sh /usr/local/bin/vhost
+yes | cp -rf /vagrant/files/tools/vhost.sh /usr/local/bin/vhost
 chmod +x /usr/local/bin/vhost
