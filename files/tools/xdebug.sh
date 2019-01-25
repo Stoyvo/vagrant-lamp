@@ -8,6 +8,11 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 ####################
 
+## TODO: 'status' param, if xDebug enabled/disabled
+## TODO: Optional param to enable/disable xdebug for specific version
+## TODO: Enable/Disable xdebug profiling
+## TODO: Try to restart only 1 PHP instance
+
 function show_header {
     echo -e "\e[32m"
     echo -e "${GREEN}*************************${NC}"
