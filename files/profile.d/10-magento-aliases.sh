@@ -19,7 +19,7 @@ function cac {
             ;;
         M2)
             echo 'Cache clear for M2';
-            eval php7 bin/magento cache:flush;
+            eval bin/magento cache:flush;
             ;;
         *)
             echo $(m1m2);
@@ -77,7 +77,7 @@ function templateHelp  {
             cac;
             ;;
         M2)
-            php bin/magento dev:template-hints:enable;
+            bin/magento dev:template-hints:enable;
             ;;
         *)
             echo $(m1m2)

@@ -30,8 +30,8 @@ The following functions and aliases are available:
 
 
 \e[1mPHP:\e[0;32m
-  phpRestart        - restarts all installed PHP FPM services
-  xdebug 0|1        - Enables / Disables xdebug for all installed PHP versions (switching off saves time and memory)
+  phpRestart            - restarts all installed PHP FPM services
+  xdebug enable|disable - Enables / Disables xdebug for all installed PHP versions (switching off saves time and memory)
 
   The following PHP versions are available with this release and may be invoked in shell via their aliases:
 ###php_versions###\e[0;32m

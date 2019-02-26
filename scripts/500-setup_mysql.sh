@@ -24,21 +24,18 @@ echo -e "${YELLOW}******************************${NC}"
 if [ -f /etc/init.d/mysql* ]; then
     service mysql stop
 
-    sed -i "s/datadir.*/datadir         = \/srv\/mysql\/data/"     /etc/mysql/percona-server.conf.d/mysqld.cnf
+    sed -i "s/datadir.*/datadir = \/srv\/mysql\/data/" /etc/mysql/percona-server.conf.d/mysqld.cnf
     if [ ! -d /srv/mysql/data/mysql ]; then
-        echo "Copying mysql databases from /var/lib/mysql/ to /srv/mysql/data ..."
-        cp -r /var/lib/mysql/* /srv/mysql/data
+        echo "Copying mysql databases from /var/lib/mysql/ to /srv/mysql/data/"
+        cp -fR /var/lib/mysql/* /srv/mysql/data
+        echo "Done copying mysql databases"
     else
-        echo "Not moving mysql databases from /var/lib/mysql/ to /srv/mysql/data since data is already present there"
+        echo "Not moving mysql databases from /var/lib/mysql/ to /srv/mysql/data/ since data is already present there"
     fi
-    service mysql start
 
-    # Get password for debian-sys-maintainer in case we have existing databases which need to have this set to a new value
-    debian_sys_maint_pwd=`sudo grep password /etc/mysql/debian.cnf | head -n1 | cut -d' ' -f3`
-    export MYSQL_PWD='root'
-    echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'root';" | mysql -u'root'
-    echo "GRANT ALL PRIVILEGES ON *.* TO 'debian-sys-maint'@'localhost' IDENTIFIED BY '${debian_sys_maint_pwd}';" | mysql -u'root'
-    export MYSQL_PWD=''
+    sudo chown -fR mysql:mysql /srv/mysql
+
+    service mysql start
 fi
 
 export DEBIAN_FRONTEND=noninteractive
@@ -47,11 +44,14 @@ if [ ! -f /etc/init.d/mysql* ]; then
     dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
     apt-get update
 
-    export MYSQL_ROOT_PASSWORD=root
-    export DEBIAN_FRONTEND=noninteractive
+    export MYSQL_ROOT_PASSWORD='root'
+    export DEBIAN_FRONTEND='noninteractive'
 
     echo "percona-server-server-5.7 percona-server-server-5.7/root-pass password $MYSQL_ROOT_PASSWORD" | debconf-set-selections
     echo "percona-server-server-5.7 percona-server-server-5.7/re-root-pass password $MYSQL_ROOT_PASSWORD" | debconf-set-selections
+
+    export MYSQL_ROOT_PASSWORD=''
+    export DEBIAN_FRONTEND=''
 
     apt install -y percona-server-server-5.7 percona-server-client-5.7 2>&1
 
@@ -65,11 +65,14 @@ if [ ! -f /etc/init.d/mysql* ]; then
     sed -i "s/explicit_defaults_for_timestamp/explicit_defaults_for_timestamp\ninnodb_log_file_size = 256M\nmax_allowed_packet = 64M/" /etc/mysql/percona-server.conf.d/mysqld.cnf
     sed -i "s/datadir.*/datadir = \/srv\/mysql\/data/" /etc/mysql/percona-server.conf.d/mysqld.cnf
     if [ ! -d /srv/mysql/data/mysql ]; then
-        echo "Copying mysql databases from /var/lib/mysql/ to /srv/mysql/data ..."
-        cp -r /var/lib/mysql /srv/mysql/data
+        echo "Copying mysql databases from /var/lib/mysql/ to /srv/mysql/data/"
+        cp -r /var/lib/mysql/* /srv/mysql/data
+        echo "Done copying mysql databases"
     else
-        echo "Not moving mysql databases from /var/lib/mysql/ to /srv/mysql/data since data is already present there"
+        echo "Not moving mysql databases from /var/lib/mysql/ to /srv/mysql/data/ since data is already present there"
     fi
+
+    sudo chown -fR mysql:mysql /srv/mysql
 
     service mysql start
 
