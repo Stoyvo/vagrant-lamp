@@ -86,8 +86,6 @@ specifically.
 -   lynx
 -   Mailhog
 -   NVM (Node Version Manager)
-    - NodeJS 10.15.1
-    - NodeJS 8.15.0
 
 
 #### The following Extra Tools are available:
