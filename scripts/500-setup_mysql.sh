@@ -24,7 +24,7 @@ echo -e "${YELLOW}******************************${NC}"
 if [ -f /etc/init.d/mysql* ]; then
     service mysql stop
 
-    sed -i "s/datadir.*/datadir         = \/srv\/mysql\/data/"     /etc/mysql/my.cnf
+    sed -i "s/datadir.*/datadir         = \/srv\/mysql\/data/"     /etc/mysql/percona-server.conf.d/mysqld.cnf
     if [ ! -d /srv/mysql/data/mysql ]; then
         echo "Copying mysql databases from /var/lib/mysql/ to /srv/mysql/data ..."
         cp -r /var/lib/mysql/* /srv/mysql/data
@@ -47,7 +47,6 @@ if [ ! -f /etc/init.d/mysql* ]; then
     dpkg -i percona-release_latest.$(lsb_release -sc)_all.deb
     apt-get update
 
-
     export MYSQL_ROOT_PASSWORD=root
     export DEBIAN_FRONTEND=noninteractive
 
@@ -58,13 +57,16 @@ if [ ! -f /etc/init.d/mysql* ]; then
 
     service mysql stop
 
-    sed -i "s/bind-address.*/bind-address    = 0.0.0.0/"           /etc/mysql/my.cnf
+    sed -i "s/explicit_defaults_for_timestamp/explicit_defaults_for_timestamp\nbind-address = 0.0.0.0/" /etc/mysql/percona-server.conf.d/mysqld.cnf
 
-    sed -i "s/max_allowed_packet.*/max_allowed_packet      = 64M/" /etc/mysql/my.cnf
-    sed -i "s/datadir.*/datadir         = \/srv\/mysql\/data/"     /etc/mysql/my.cnf
+    # AIO with file mount fails, lets disable
+    sed -i "s/explicit_defaults_for_timestamp/explicit_defaults_for_timestamp\ninnodb_use_native_aio=0/" /etc/mysql/percona-server.conf.d/mysqld.cnf
+
+    sed -i "s/explicit_defaults_for_timestamp/explicit_defaults_for_timestamp\ninnodb_log_file_size = 256M\nmax_allowed_packet = 64M/" /etc/mysql/percona-server.conf.d/mysqld.cnf
+    sed -i "s/datadir.*/datadir = \/srv\/mysql\/data/" /etc/mysql/percona-server.conf.d/mysqld.cnf
     if [ ! -d /srv/mysql/data/mysql ]; then
         echo "Copying mysql databases from /var/lib/mysql/ to /srv/mysql/data ..."
-        cp -r /var/lib/mysql/* /srv/mysql/data
+        cp -r /var/lib/mysql /srv/mysql/data
     else
         echo "Not moving mysql databases from /var/lib/mysql/ to /srv/mysql/data since data is already present there"
     fi
@@ -76,9 +78,9 @@ if [ ! -f /etc/init.d/mysql* ]; then
     export MYSQL_PWD=''
 fi
 
-if [[ $(/etc/mysql/my.cnf | grep 'innodb_log_file_size')  == '' ]]; then
+if [[ $(/etc/mysql/percona-server.conf.d/mysqld.cnf | grep 'innodb_log_file_size')  == '' ]]; then
     echo "Patching to allow long blobs in mysql imports"
-    sed -i 's/skip-external-locking/skip-external-locking\ninnodb_log_file_size = 256M\n/' /etc/mysql/my.cnf
+    sed -i 's/explicit_defaults_for_timestamp/explicit_defaults_for_timestamp\ninnodb_log_file_size = 256M\n/' /etc/mysql/percona-server.conf.d/mysqld.cnf
 fi
 
 apt-get install -q -y percona-toolkit 2>&1

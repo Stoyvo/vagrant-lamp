@@ -9,20 +9,6 @@ function phpRestart() {
     done;
 }
 
-function xdebug {
-    local ini ini_files services state
-    state=$([ ${1:-1} == 0 ] && echo ";");
-    echo $([ ${1:-1} == 0 ] && echo "Disabling" || echo "Enabling")" X-Debug:"
-    services=$(ls -a /etc/init.d/ | grep php);
-    ini_files=$(ls -df /opt/phpfarm/inst/php-*/lib/php.ini);
-    for ini in ${ini_files}
-        do sudo sed -i "s/[;]*zend_extension=xdebug.so/${state}zend_extension=xdebug.so/g" ${ini};
-    done;
-    for svc in ${services}
-        do echo -n "  * Restarting ${svc}... " && sudo service ${svc} restart > null && echo "done."
-    done;
-}
-
 function makePhpShortformAliases {
     local arr config_php i phpa
     source /vagrant/config_php.sh
