@@ -27,8 +27,8 @@ zend_extension=opcache.so
 opcache.enable=1
 opcache.enable_cli=1
 opcache.interned_strings_buffer=8
-opcache.max_accelerated_files=10000
-opcache.memory_consumption=256
+opcache.max_accelerated_files=65406
+opcache.memory_consumption=512
 opcache.revalidate_freq=30
 EOL
 }
